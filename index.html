@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>injector</title>
+<style>
+body{font-family:Arial,sans-serif;margin:0;background:#f0f2f5;}
+.header{background:#2196f3;color:white;padding:15px;text-align:center;font-size:22px;font-weight:bold;}
+.tab{display:none;padding:10px;}
+.main-tabs{display:flex;background:#1976d2;}
+.main-tabs button{flex:1;padding:14px;border:none;background:#1976d2;color:white;font-size:16px;cursor:pointer;}
+.home-tabs{display:flex;gap:5px;margin:10px 0;}
+.home-tabs button{flex:1;padding:10px;border:none;border-radius:6px;background:#2196f3;color:white;}
+.apk{background:white;padding:12px;margin-bottom:12px;border-radius:10px;box-shadow:0 2px 6px rgba(0,0,0,0.2);display:flex;gap:12px;}
+.apk img{width:60px;height:60px;border-radius:10px;}
+.progress-container{width:100%;background:#ddd;border-radius:6px;margin-top:5px;}
+.progress-bar{width:0%;height:8px;background:#4caf50;border-radius:6px;}
+input,textarea{width:95%;padding:8px;margin:5px 0;border-radius:5px;border:1px solid #ccc;}
+
+/* PROFILE UI */
+.card{background:white;padding:15px;margin:10px 0;border-radius:10px;box-shadow:0 2px 6px rgba(0,0,0,0.2);}
+.setting{display:flex;justify-content:space-between;align-items:center;padding:8px 0;}
+.btn{width:100%;padding:10px;margin-top:8px;border:none;border-radius:6px;background:#2196f3;color:white;cursor:pointer;}
+.logout{width:100%;padding:12px;background:#f44336;color:white;border:none;border-radius:8px;margin-top:10px;cursor:pointer;}
+
+/* toggle */
+.switch{position:relative;display:inline-block;width:40px;height:22px;}
+.switch input{opacity:0;width:0;height:0;}
+.slider{position:absolute;cursor:pointer;top:0;left:0;right:0;bottom:0;background:#ccc;transition:.3s;border-radius:20px;}
+.slider:before{position:absolute;content:"";height:16px;width:16px;left:3px;bottom:3px;background:white;transition:.3s;border-radius:50%;}
+input:checked + .slider{background:#4caf50;}
+input:checked + .slider:before{transform:translateX(18px);}
+
+/* icon preview limit */
+#previewIcon{width:90px;height:90px;max-width:256px;max-height:256px;border-radius:10px;}
+</style>
+
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
+<script src="app.js"></script>
+</head>
+<body>
+
+<!-- LOGIN -->
+<div id="login">
+<h2 style="text-align:center">INJECTOR UPLOADER LOG IN </h2>
+<input id="user" placeholder="Username"><br>
+<input type="password" id="password" placeholder="Password"><br>
+<div id="captcha" style="font-weight:bold;font-size:18px;margin:10px 0;"></div>
+<input id="capInput" placeholder="Enter CAPTCHA"><br>
+<button onclick="login()" class="btn">Login / Register</button>
+</div>
+
+<!-- APP -->
+<div id="app" style="display:none">
+<div class="header">INJECTOR UPLOADER</div>
+
+<div class="main-tabs">
+<button onclick="showTab('home')">Home</button>
+<button onclick="showTab('upload')">Upload</button>
+<button onclick="showTab('profile')">Profile</button>
+</div>
+
+<!-- HOME -->
+<div id="home" class="tab">
+<input id="search" placeholder="Search APK" oninput="render()">
+<div class="home-tabs">
+<button onclick="switchHomeTab('latest')">Latest</button>
+<button onclick="switchHomeTab('top')">Most Downloaded</button>
+<button onclick="switchHomeTab('my')">My Uploads</button>
+</div>
+<div id="latest" class="home-tab"></div>
+<div id="top" class="home-tab"></div>
+<div id="my" class="home-tab"></div>
+</div>
+
+<!-- UPLOAD -->
+<div id="upload" class="tab">
+<h2>Upload APK</h2>
+<input id="name" placeholder="App Name"><br>
+<textarea id="desc" placeholder="Description"></textarea><br>
+<input id="apk" placeholder="MediaFire APK link"><br>
+<input type="file" id="iconFile" accept="image/*" onchange="previewIcon(event)"><br>
+<img id="previewIcon"><br>
+<button onclick="upload()" class="btn">Upload</button>
+</div>
+
+<!-- PROFILE -->
+<div id="profile" class="tab">
+<div class="card"><b>Username:</b> <span id="profileName"></span></div>
+
+<div class="card">
+<h3>Privacy Settings</h3>
+<div class="setting"><span>Public Profile</span><label class="switch"><input type="checkbox" checked><span class="slider"></span></label></div>
+<div class="setting"><span>Show My Uploads</span><label class="switch"><input type="checkbox" checked><span class="slider"></span></label></div>
+<div class="setting"><span>Allow Comments</span><label class="switch"><input type="checkbox" checked><span class="slider"></span></label></div>
+<div class="setting"><span>Track Downloads</span><label class="switch"><input type="checkbox" checked><span class="slider"></span></label></div>
+</div>
+
+<div class="card">
+<h3>Account</h3>
+<button onclick="changeUsername()" class="btn">Change Username</button>
+<button onclick="changePassword()" class="btn">Change Password</button>
+</div>
+
+<button onclick="logout()" class="logout">Logout</button>
+</div>
+</body>
+</html>
